@@ -68,14 +68,15 @@ async def full_analyze(github_url, branch=None, progress=gr.Progress()):
         progress(0.7, desc="📦 Checking Dependencies...")
         dep_task = dep_service.audit_dependencies(path)
         
-        progress(0.8, desc="📖 Generating Onboarding Guide...")
-        onboarding_task = onboarding_service.generate_onboarding_guide(path)
-
-        # Gather all results
-        summary, tech_debt, security, deps, onboarding = await asyncio.gather(
-            summary_task, tech_debt_task, sec_task, dep_task, onboarding_task
+        # Gather all results except onboarding
+        summary, tech_debt, security, deps = await asyncio.gather(
+            summary_task, tech_debt_task, sec_task, dep_task
         )
         
+        progress(0.8, desc="📖 Generating Onboarding Guide...")
+        # Onboarding requires the summary result and path
+        onboarding = onboarding_service.generate_guide(path, summary)
+
         progress(1.0, desc="💎 Analysis Complete!")
         
         # Format outputs as Markdown/HTML for the cards
@@ -127,7 +128,7 @@ async def full_analyze(github_url, branch=None, progress=gr.Progress()):
                 dep_md += f"- ❌ `vulnerable`: **{v['name']}**\n"
         
         # Onboarding Guide
-        onboarding_md = f"### 🗺️ Contributor Roadmap\n\n{onboarding['guide']}"
+        onboarding_md = f"### 🗺️ Contributor Roadmap\n\n{onboarding.get('setup_steps', 'No steps found.')}" # Simplified for now
 
         status_text = "✨ Archaeological dig successful. View findings below."
         
