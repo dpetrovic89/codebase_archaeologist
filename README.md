@@ -2,7 +2,7 @@
 title: Codebase Archaeologist
 emoji: 🏺
 colorFrom: green
-colorTo: black
+colorTo: gray
 sdk: docker
 app_file: app.py
 pinned: false
