@@ -7,7 +7,7 @@ load_dotenv()
 import gradio as gr
 import asyncio
 from main import (
-    git_service, analysis_service, dep_service, sec_service, onboarding_service,
+    mcp, git_service, analysis_service, dep_service, sec_service, onboarding_service,
     RepoSummary, TechDebtReport, DependencyReport, SecurityReport, OnboardingGuide
 )
 
@@ -302,7 +302,7 @@ with gr.Blocks(css=custom_css, title="Codebase Archaeologist") as app:
 
             ### ☁️ 2. Remote Setup (Hugging Face)
             If you have deployed this to Hugging Face, you can use the **SSE** endpoint:
-            - **URL**: `https://your-space-name.hf.space/sse`
+            - **URL**: `https://your-space-name.hf.space/mcp/sse`
             - **Type**: `Remote MCP`
 
             ### 🏺 Available Tools
@@ -321,6 +321,10 @@ with gr.Blocks(css=custom_css, title="Codebase Archaeologist") as app:
     
     gr.Markdown("---")
     gr.Markdown("🛡️ **Privacy**: Analysis is performed on-the-fly. Local clones are cleaned up immediately after report generation.")
+
+# Mount the MCP SSE application
+# This exposes /sse and /messages required for Remote MCP
+app.app.mount("/mcp", mcp.sse_app())
 
 if __name__ == "__main__":
     app.launch(server_name="0.0.0.0", server_port=7860)
