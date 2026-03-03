@@ -1,0 +1,11 @@
+mcp
+GitPython
+httpx
+radon
+bandit
+pydantic-settings
+gradio
+gradio_client
+pydantic
+python-dotenv
+pytest

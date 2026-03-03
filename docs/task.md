@@ -1,0 +1,49 @@
+# Task: Codebase Archaeologist MCP Server
+
+- [x] Planning
+    - [x] Research free code analysis models on Hugging Face
+    - [x] Define MCP server tool signatures
+    - [x] Create Python implementation plan
+- [x] Setup
+    - [x] Initialize Python MCP project (FastMCP)
+    - [x] Install dependencies (mcp, pydantic, GitPython, httpx, etc.)
+    - [x] Create `.gitignore` (ignore tmp_repos, __pycache__, .env)
+    - [x] Create `README.md` with MCP & Gradio instructions
+    - [x] Create `.env` for local secrets
+- [x] Implementation
+    - [x] `analyze_repo`: Size check, shallow clone, metadata extraction
+    - [x] `find_tech_debt`: Radon complexity, TODO scanning, AST analysis
+    - [x] `audit_dependencies`: Parse deps, OSV/PyPI API integration
+    - [x] `detect_security_smells`: Regex rules, Bandit integration
+    - [x] `estimate_refactor_effort`: Effort formula implementation
+    - [x] `generate_onboarding_guide`: File-based onboarding generation
+    - [x] `compare_repos`: Parallel evaluation logic
+- [x] Deployment
+    - [x] Create Dockerfile for Hugging Face Spaces
+    - [x] Create `app.py` wrapper for SSE transport
+    - [x] Document `GITHUB_TOKEN` secret requirement
+    - [x] Deploy to Hugging Face Spaces
+- [x] Frontend Redesign (Industrial Utilitarian)
+    - [x] Choose and implement expressive fonts (Space Grotesk, JetBrains Mono)
+    - [x] Implement Obsidian/Emerald high-contrast theme
+    - [x] Add custom CSS for "Scanning Log" header
+    - [x] Use `gr.HTML` for data-dense cards and status badges
+- [x] Final Hardening & Scoring Sync
+    - [x] Sync Tech Debt scoring formula in `main.py`
+    - [x] Secure MCP tool error handling (hide local paths)
+    - [x] Add timeout to Bandit security scan
+    - [x] Enhance GitHub URL validation
+    - [x] HTML-escape TODO content in `app.py`
+- [x] Verification
+    - [x] Test with a public sample repo
+    - [x] Verify error handling for invalid URLs
+    - [x] Verify report formatting and collapsible lists
+- [/] Automated Testing
+    - [/] Create `tests/` directory and basic service unit tests
+    - [ ] Add `pytest` to `requirements.txt`
+    - [ ] Verify scoring logic synchronization via tests
+    - [ ] Run and pass all tests
+- [/] Completion
+    - [x] Finalize README
+    - [x] Create architecture.md
+    - [ ] Update walkthrough.md with test details
