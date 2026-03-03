@@ -1,0 +1,24 @@
+name: Sync to Hugging Face Hub
+on:
+  push:
+    branches: [main]
+  force_push:
+    branches: [main]
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to HF
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # Replace YOUR_HF_USERNAME and YOUR_SPACE_NAME
+          git push --force https://dpetrovic89:$HF_TOKEN@huggingface.co/spaces/dpetrovic89/codebase_archaeologist main
+坐
