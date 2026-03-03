@@ -24,6 +24,23 @@ theme = gr.themes.Soft(
     block_title_text_color="*primary_400",
 )
 
+css_code = """
+    .gradio-container { background: #050505 !important; }
+    #header-log { 
+        background: #111; 
+        border: 1px solid #10b981; 
+        padding: 10px; 
+        margin-bottom: 20px; 
+        font-family: 'JetBrains Mono';
+        color: #10b981;
+    }
+    .technical-card {
+        background: #111827 !important;
+        border: 1px solid #374151 !important;
+        border-radius: 4px !important;
+    }
+"""
+
 async def full_analyze(github_url, branch=None, progress=gr.Progress()):
     if not github_url:
         return "Please enter a valid GitHub URL.", "", "", "", "", ""
@@ -155,24 +172,9 @@ async def compare_repos(url1, url2):
 # Define the local port for MCP (used in documentation)
 local_port = 8000 # Default FastMCP port
 
-with gr.Blocks(theme=theme, css="""
-    .gradio-container { background: #050505 !important; }
-    #header-log { 
-        background: #111; 
-        border: 1px solid #10b981; 
-        padding: 10px; 
-        margin-bottom: 20px; 
-        font-family: 'JetBrains Mono';
-        color: #10b981;
-    }
-    .technical-card {
-        background: #111827 !important;
-        border: 1px solid #374151 !important;
-        border-radius: 4px !important;
-    }
-""") as app:
+with gr.Blocks() as app:
     
-    with gr.Div(elem_id="header-log"):
+    with gr.Group(elem_id="header-log"):
         gr.HTML("<h1>🏺 CODEBASE ARCHAEOLOGIST - EXCAVATION TERMINAL</h1>")
         gr.Markdown("Surfacing technical debt and architectural artifacts from the digital deep.")
 
@@ -270,5 +272,5 @@ async def mcp_test():
     return {"status": "alive", "mcp_prefix": "/mcp"}
 
 if __name__ == "__main__":
-    app.launch(server_name="0.0.0.0", server_port=7860)
+    app.launch(server_name="0.0.0.0", server_port=7860, theme=theme, css=css_code)
 坐
