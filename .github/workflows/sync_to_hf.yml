@@ -2,8 +2,12 @@ name: Sync to Hugging Face Hub
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '**.md'
   force_push:
     branches: [main]
+    paths-ignore:
+      - '**.md'
 
 jobs:
   dispatch:
@@ -20,5 +24,4 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           # Replace YOUR_HF_USERNAME and YOUR_SPACE_NAME
-          git push --force https://dpetrovic89:$HF_TOKEN@huggingface.co/spaces/dpetrovic89/codebase_archaeologist main
-坐
+          git push --force https://executor1389:$HF_TOKEN@huggingface.co/spaces/executor1389/codebase_archaeologist main
