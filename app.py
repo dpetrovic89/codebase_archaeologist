@@ -201,20 +201,22 @@ with gr.Blocks() as app:
             scan_btn = gr.Button("🚀 START EXCAVATION", variant="primary")
             status_out = gr.Markdown("Status: Idle", elem_id="status-bar")
             
-            with gr.Row():
-                with gr.Column():
+            # --- Results Explorer Tabs ---
+            with gr.Tabs(elem_id="results-explorer"):
+                with gr.Tab("📊 Summary"):
                     summary_view = gr.Markdown(label="Archaeological Summary", elem_classes="technical-card")
-                with gr.Column():
+                
+                with gr.Tab("📉 Tech Debt"):
                     tech_debt_view = gr.HTML(label="Tech Debt Analysis", elem_classes="technical-card")
-            
-            with gr.Row():
-                with gr.Column():
+                
+                with gr.Tab("🛡️ Security"):
                     security_view = gr.Markdown(label="Security Smells", elem_classes="technical-card")
-                with gr.Column():
+                
+                with gr.Tab("📦 Dependencies"):
                     dependency_view = gr.Markdown(label="Contaminant Audit", elem_classes="technical-card")
-            
-            with gr.Row():
-                onboarding_view = gr.Markdown(label="Onboarding Artifacts", elem_classes="technical-card")
+                
+                with gr.Tab("🗺️ Roadmap"):
+                    onboarding_view = gr.Markdown(label="Onboarding Artifacts", elem_classes="technical-card")
 
         with gr.Tab("⚔️ Comparison Hall"):
             gr.Markdown("### Battle of the Codebases")
