@@ -79,18 +79,23 @@ async def full_analyze(github_url, branch=None, progress=gr.Progress()):
 
         progress(1.0, desc="💎 Analysis Complete!")
         
+        # Safe Metadata Extraction
+        repo_name = github_url.rstrip("/").split("/")[-1]
+        total_files = summary.get("total_files", 0)
+        total_lines = summary.get("total_lines", 0)
+        primary_lang = next(iter(summary.get("languages", {})), "Unknown")
+
         # Format outputs as Markdown/HTML for the cards
         summary_md = f"""
-### 📊 {summary['repo_name']} Summary
-- **Files**: {summary['total_files']} 
-- **Lines**: {summary['total_lines']}
-- **Primary**: {next(iter(summary['languages']), 'Unknown')}
-- **Size**: {summary['size_kb']} KB
+### 📊 {repo_name} Summary
+- **Files**: {total_files} 
+- **Lines**: {total_lines}
+- **Primary**: {primary_lang}
 """
 
         # Tech Debt Card with Progress bar concept
-        score = tech_debt['debt_score']
-        grade = tech_debt['debt_grade']
+        score = tech_debt.get('debt_score', 0)
+        grade = tech_debt.get('debt_grade', 'N/A')
         color = "#10b981" if score < 30 else "#f59e0b" if score < 60 else "#ef4444"
         
         debt_md = f"""
@@ -99,33 +104,33 @@ async def full_analyze(github_url, branch=None, progress=gr.Progress()):
     <p style='font-size: 1.1em; font-family: "JetBrains Mono";'>Debt Score: {score}/100</p>
     <hr style='border: 0; border-top: 1px solid #334155; margin: 10px 0;'>
     <details>
-        <summary style='cursor: pointer; color: #10b981;'>Show Complex Functions ({len(tech_debt['complex_functions'])})</summary>
-        <pre>{chr(10).join([f"- {f['name']} (score: {f['complexity']})" for f in tech_debt['complex_functions'][:5]])}</pre>
+        <summary style='cursor: pointer; color: #10b981;'>Show Complex Functions ({len(tech_debt.get('complex_functions', []))})</summary>
+        <pre>{chr(10).join([f"- {f.get('name', '???')} (score: {f.get('complexity', 0)})" for f in tech_debt.get('complex_functions', [])[:5]])}</pre>
     </details>
     <details>
-        <summary style='cursor: pointer; color: #10b981;'>Show Long Functions ({len(tech_debt['long_functions'])})</summary>
-        <pre>{chr(10).join([f"- {f['name']} ({f['lines']} lines)" for f in tech_debt['long_functions'][:5]])}</pre>
+        <summary style='cursor: pointer; color: #10b981;'>Show Long Functions ({len(tech_debt.get('long_functions', []))})</summary>
+        <pre>{chr(10).join([f"- {f.get('name', '???')} ({f.get('lines', 0)} lines)" for f in tech_debt.get('long_functions', [])[:5]])}</pre>
     </details>
 </div>
 """
 
         # Security Smells
         sec_md = "#### 🛡️ Security Findings\n"
-        if not security['regex_findings'] and not security['bandit_findings']:
+        if not security.get('regex_findings') and not security.get('bandit_findings'):
             sec_md += "✅ No high-priority smells detected."
         else:
-            for f in security['regex_findings']:
-                sec_md += f"- ⚠️ **{f['type']}** in `{f['file']}`\n"
-            for b in security['bandit_findings']:
-                sec_md += f"- 🚩 **Bandit {b['issue_severity']}**: {b['issue_text']}\n"
+            for f in security.get('regex_findings', []):
+                sec_md += f"- ⚠️ **{f.get('type', 'Unknown')}** in `{f.get('file', '???')}`\n"
+            for b in security.get('bandit_findings', []):
+                sec_md += f"- 🚩 **Bandit {b.get('issue_severity', '???')}**: {b.get('issue_text', '???')}\n"
 
         # Dependencies
-        dep_md = f"#### 📦 Dependencies ({deps['total_deps']})\n"
-        if not deps['vulnerable_deps']:
+        dep_md = f"#### 📦 Dependencies ({deps.get('total_deps', 0)})\n"
+        if not deps.get('vulnerable_deps'):
             dep_md += "✅ No known vulnerabilities found (OSV Scan)."
         else:
-            for v in deps['vulnerable_deps']:
-                dep_md += f"- ❌ `vulnerable`: **{v['name']}**\n"
+            for v in deps.get('vulnerable_deps', []):
+                dep_md += f"- ❌ `vulnerable`: **{v.get('name', 'Unknown')}**\n"
         
         # Onboarding Guide
         onboarding_md = f"### 🗺️ Contributor Roadmap\n\n{onboarding.get('setup_steps', 'No steps found.')}" # Simplified for now
@@ -136,6 +141,8 @@ async def full_analyze(github_url, branch=None, progress=gr.Progress()):
 
     except Exception as e:
         # Privacy: redact paths in errors
+        import traceback
+        print(f"DEBUG: Analysis crash: {traceback.format_exc()}")
         err_msg = str(e)
         if "tmp_repos" in err_msg or ":" in err_msg:
             err_msg = "An internal analysis error occurred. Local file system paths have been redacted for security."
