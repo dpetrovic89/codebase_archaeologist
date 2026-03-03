@@ -1,3 +1,13 @@
+---
+title: Codebase Archaeologist
+emoji: 🏺
+colorFrom: green
+colorTo: black
+sdk: docker
+app_file: app.py
+pinned: false
+---
+
 # 🏺 Codebase Archaeologist
 
 An MCP server and Gradio UI that digs through GitHub repositories to surface tech debt, security smells, architectural patterns, and dependency risks. 
@@ -38,7 +48,7 @@ Add this to your `claude_desktop_config.json`:
   }
 }
 ```
-坐
+
 ## 🔐 Environment Variables
 To avoid GitHub API rate limits, it is highly recommended to set a token:
 - `GITHUB_TOKEN`: Your GitHub Personal Access Token.
